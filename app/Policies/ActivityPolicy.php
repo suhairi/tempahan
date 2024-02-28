@@ -2,7 +2,9 @@
 
 namespace App\Policies;
 
+use Illuminate\Auth\Access\Response;
 use App\Models\User;
+
 
 class ActivityPolicy
 {
@@ -12,5 +14,10 @@ class ActivityPolicy
     public function __construct()
     {
         //
+    }
+
+    public function viewAny(): bool
+    {
+        return auth()->user()->hasRole('Super Admin');
     }
 }

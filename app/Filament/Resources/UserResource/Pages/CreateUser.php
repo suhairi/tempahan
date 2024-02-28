@@ -17,6 +17,11 @@ class CreateUser extends CreateRecord implements ShouldQueue
 {
     protected static string $resource = UserResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function getCreatedNotification(): ?Notification
     {
         $user = $this->record;
