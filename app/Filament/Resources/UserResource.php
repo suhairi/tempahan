@@ -6,6 +6,7 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -21,7 +22,14 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'System Management';
+
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {
@@ -40,6 +48,18 @@ class UserResource extends Resource
                     ->required()
                     ->default('password')
                     ->maxLength(255),
+                Select::make('roles')
+                    ->label('**Roles')
+                    ->relationship('roles', 'name')
+                    ->createOptionForm([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Role Name')
+                            ->required()
+                            ->maxLength(255),
+                    ])
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
             ])->columns(3);
     }
 

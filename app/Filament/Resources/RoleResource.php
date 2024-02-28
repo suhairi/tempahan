@@ -20,7 +20,14 @@ class RoleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'System Management';    
+
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {
@@ -31,6 +38,7 @@ class RoleResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('guard_name')
                     ->required()
+                    ->default('web')
                     ->maxLength(255),
                 Select::make('permissions')
                     ->label('**Permissions')

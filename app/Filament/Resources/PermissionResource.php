@@ -19,7 +19,14 @@ class PermissionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'System Management';
+
     protected static ?int $navigationSort = 3;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {
@@ -30,6 +37,7 @@ class PermissionResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('guard_name')
                     ->required()
+                    ->default('web')
                     ->maxLength(255),
             ]);
     }
