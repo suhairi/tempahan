@@ -29,10 +29,12 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
+                    ->default('suhairi@mada.gov.my')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->required()
+                    ->default('password')
                     ->maxLength(255),
             ])->columns(3);
     }

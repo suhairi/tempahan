@@ -3,24 +3,35 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
+use App\Mail\UserCreated;
 use App\Models\User;
 use Filament\Actions;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Mail;
 
-class CreateUser extends CreateRecord
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class CreateUser extends CreateRecord implements ShouldQueue
 {
     protected static string $resource = UserResource::class;
 
-    // protected function getCreatedNotification(): ?Notification
-    // {
-    //     $recipient = auth()->user();
+    protected function getCreatedNotification(): ?Notification
+    {
+        $user = $this->record;
 
-    //     return Notification::make()
-    //         ->success()
-    //         ->title('User registered in getCreatedNotification')
-    //         ->body('The user has been created successfully.')
-    //         ->sendToDatabase($recipient);
-    // }
+        Mail::to($user)
+            // ->send(new UserCreated($user))
+            ->queue(new UserCreated($user))
+            ;
+
+        return Notification::make()
+            ->success()
+            ->title('User registered in getCreatedNotification')
+            ->body('The user has been created successfully.')
+            ->sendToDatabase($user);
+        
+        
+    }
 }
