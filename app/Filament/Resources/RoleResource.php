@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RoleResource\Pages;
 use App\Filament\Resources\RoleResource\RelationManagers;
-use App\Models\Role;
+// use App\Models\Role;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Spatie\Permission\Models\Role;
 
 class RoleResource extends Resource
 {
@@ -41,18 +42,18 @@ class RoleResource extends Resource
                     ->default('web')
                     ->readOnly()
                     ->maxLength(255),
-                // Select::make('permissions')
-                //     ->label('**Permissions')
-                //     ->relationship('permissions', 'name')
-                //     ->createOptionForm([
-                //         Forms\Components\TextInput::make('name')
-                //             ->label('Permission Name')
-                //             ->required()
-                //             ->maxLength(255),
-                //     ])
-                //     ->multiple()
-                //     ->searchable()
-                //     ->preload()
+                Select::make('permissions')
+                    ->label('**Permissions')
+                    ->relationship('permissions', 'name')
+                    ->createOptionForm([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Permission Name')
+                            ->required()
+                            ->maxLength(255),
+                    ])
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
             ])->columns(3);
     }
 
@@ -78,6 +79,7 @@ class RoleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

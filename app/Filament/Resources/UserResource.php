@@ -52,7 +52,11 @@ class UserResource extends Resource
                     ->maxLength(255),
                 Select::make('roles')
                     ->label('**Roles')
-                    ->relationship('roles', 'name')
+                    ->relationship(
+                        name: 'roles',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn(Builder $query) => $query->where('name', '!=', 'Super Admin')    
+                    )
                     ->createOptionForm([
                         Forms\Components\TextInput::make('name')
                             ->label('Role Name')

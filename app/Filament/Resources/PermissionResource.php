@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PermissionResource\Pages;
 use App\Filament\Resources\PermissionResource\RelationManagers;
-use App\Models\Permission;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -13,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Spatie\Permission\Models\Permission;
 
 class PermissionResource extends Resource
 {
@@ -40,19 +40,19 @@ class PermissionResource extends Resource
                     ->required()
                     ->default('web')
                     ->maxLength(255),
-                // Select::make('roles')
-                //     ->label('**Permissions')
-                //     ->relationship('roles', 'name')
-                //     ->createOptionForm([
-                //         Forms\Components\TextInput::make('name')
-                //             ->label('Roles Name')
-                //             ->required()
-                //             ->maxLength(255),
-                //     ])
-                //     ->multiple()
-                //     ->searchable()
-                //     ->preload()
-            ]);
+                Select::make('roles')
+                    ->label('**Roles')
+                    ->relationship('roles', 'name')
+                    ->createOptionForm([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Roles Name')
+                            ->required()
+                            ->maxLength(255),
+                    ])
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+            ])->columns(3);
     }
 
     public static function table(Table $table): Table
