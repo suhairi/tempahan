@@ -39,19 +39,20 @@ class RoleResource extends Resource
                 Forms\Components\TextInput::make('guard_name')
                     ->required()
                     ->default('web')
+                    ->readOnly()
                     ->maxLength(255),
-                Select::make('permissions')
-                    ->label('**Permissions')
-                    ->relationship('permissions', 'name')
-                    ->createOptionForm([
-                        Forms\Components\TextInput::make('name')
-                            ->label('Permission Name')
-                            ->required()
-                            ->maxLength(255),
-                    ])
-                    ->multiple()
-                    ->searchable()
-                    ->preload()
+                // Select::make('permissions')
+                //     ->label('**Permissions')
+                //     ->relationship('permissions', 'name')
+                //     ->createOptionForm([
+                //         Forms\Components\TextInput::make('name')
+                //             ->label('Permission Name')
+                //             ->required()
+                //             ->maxLength(255),
+                //     ])
+                //     ->multiple()
+                //     ->searchable()
+                //     ->preload()
             ])->columns(3);
     }
 

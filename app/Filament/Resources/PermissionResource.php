@@ -6,6 +6,7 @@ use App\Filament\Resources\PermissionResource\Pages;
 use App\Filament\Resources\PermissionResource\RelationManagers;
 use App\Models\Permission;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -39,6 +40,18 @@ class PermissionResource extends Resource
                     ->required()
                     ->default('web')
                     ->maxLength(255),
+                // Select::make('roles')
+                //     ->label('**Permissions')
+                //     ->relationship('roles', 'name')
+                //     ->createOptionForm([
+                //         Forms\Components\TextInput::make('name')
+                //             ->label('Roles Name')
+                //             ->required()
+                //             ->maxLength(255),
+                //     ])
+                //     ->multiple()
+                //     ->searchable()
+                //     ->preload()
             ]);
     }
 
