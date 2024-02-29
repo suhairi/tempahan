@@ -15,6 +15,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
@@ -45,8 +46,9 @@ class UserResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->required()
-                    ->default('password')
+                    ->required(fn (string $operation): bool => $operation === 'create')
+                    ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
+                    ->dehydrated(fn (?string $state): bool => filled($state))
                     ->maxLength(255),
                 Select::make('roles')
                     ->label('**Roles')
@@ -59,7 +61,20 @@ class UserResource extends Resource
                     ])
                     ->multiple()
                     ->searchable()
+                    ->preload(),
+                Select::make('permissions')
+                    ->label('**Permissions')
+                    ->relationship('permissions', 'name')
+                    ->createOptionForm([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Permission Name')
+                            ->required()
+                            ->maxLength(255),
+                    ])
+                    ->multiple()
+                    ->searchable()
                     ->preload()
+                
             ])->columns(3);
     }
 
@@ -74,10 +89,8 @@ class UserResource extends Resource
                 BadgeColumn::make('roles.name')
                     ->color('success')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
-                
+                TextColumn::make('permissions.name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

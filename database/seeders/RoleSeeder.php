@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
@@ -14,10 +15,11 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         // This role is for System Administrator
-        Role::create([
+        $role = Role::create([
             'name'          => 'Super Admin',
             'guard_name'    => 'web',
         ]);
+        $role->givePermissionTo(Permission::all());
 
         //This role is for the admin of the system
         Role::create([
