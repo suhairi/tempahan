@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RoleResource\Pages;
 use App\Filament\Resources\RoleResource\RelationManagers;
+use App\Models\User;
 // use App\Models\Role;
 use Filament\Forms;
 use Filament\Forms\Components\Select;

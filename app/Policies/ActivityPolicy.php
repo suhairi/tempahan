@@ -16,8 +16,8 @@ class ActivityPolicy
         //
     }
 
-    public function viewAny(): bool
+    public function viewAny(User $user): bool
     {
-        return auth()->user()->hasRole('Super Admin');
+        return $user->hasRole('Super Admin');
     }
 }
