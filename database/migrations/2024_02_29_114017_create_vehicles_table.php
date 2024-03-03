@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->string('plateNo');
-            $table->string('brand');
-            $table->string('model');
-            $table->string('type');
-            $table->string('location'); // ['HQ', 'Wilayah', 'Worksyop', 'Pengembangan', ...]
-            $table->foreignId('driver_id');
+            $table->string('plateNo')->unique();
+            $table->string('brand')->nullable();
+            $table->string('model')->nullable();
+            $table->string('type')->nullable();
+            $table->string('location')->nullable(); // ['HQ', 'Wilayah', 'Worksyop', 'Pengembangan', ...]
+            $table->foreignId('driver_id')->nullable();
             $table->timestamps();
         });
     }
