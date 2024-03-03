@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionSeeder::class);
         $this->call(RoleSeeder::class);        
         $this->call(UserSeeder::class);
+        $this->call(CartypeSeeder::class);
+        $this->call(CarbrandSeeder::class);
         $this->call(DriverSeeder::class);
         $this->call(VehicleSeeder::class);
     }

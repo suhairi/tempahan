@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\CarBrand;
+use App\Models\Carmodel;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -18,5 +19,7 @@ class CarbrandSeeder extends Seeder
         CarBrand::create(['name' => strtoupper('toyota')]);
         CarBrand::create(['name' => strtoupper('proton')]);
         CarBrand::create(['name' => strtoupper('lexus')]);
+
+        Carmodel::create(['name' => 'PROTON', 'carbrand_id' => 4, 'cartype_id' => 1]);
     }
 }

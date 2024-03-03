@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('cartype_id');
+            $table->foreignId('carbrand_id');
             $table->timestamps();
         });
     }
