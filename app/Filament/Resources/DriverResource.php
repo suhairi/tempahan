@@ -6,9 +6,11 @@ use App\Filament\Resources\DriverResource\Pages;
 use App\Filament\Resources\DriverResource\RelationManagers;
 use App\Models\Driver;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,6 +20,8 @@ class DriverResource extends Resource
     protected static ?string $model = Driver::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $navigationGroup = 'Admin Management';
 
     public static function form(Form $form): Form
     {
@@ -44,6 +48,15 @@ class DriverResource extends Resource
                 Forms\Components\TextInput::make('pergerakan')
                     ->required()
                     ->maxLength(255),
+                Select::make('vehicles')
+                    ->label('**Vehicle')
+                    ->relationship(
+                        name: 'vehicles',
+                        titleAttribute: 'name',
+                    )
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
             ]);
     }
 
@@ -67,6 +80,7 @@ class DriverResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('pergerakan')
                     ->searchable(),
+                TextColumn::make('vehicles.name'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

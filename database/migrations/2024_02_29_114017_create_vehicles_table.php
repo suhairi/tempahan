@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->string('plateNo')->unique();
-            $table->string('brand')->nullable();
-            $table->string('model')->nullable();
+            $table->string('name')->unique();            
             $table->string('type')->nullable();
             $table->string('location')->nullable(); // ['HQ', 'Wilayah', 'Worksyop', 'Pengembangan', ...]
+            $table->foreignId('carbrand_id')->nullable();
             $table->foreignId('driver_id')->nullable();
             $table->timestamps();
         });
