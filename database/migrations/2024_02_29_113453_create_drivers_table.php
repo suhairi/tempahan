@@ -18,10 +18,8 @@ return new class extends Migration
             $table->string('phone');
             $table->string('email')->nullable();
             $table->string('staffId')->nullable();
-            $table->string('bahagian')->nullable();
-            $table->string('jawatan')->nullable();
-            $table->string('gred')->nullable();
-            $table->string('pergerakan'); // ['VIP', 'Bebas', 'Dalam', 'Luar', 'Sakit']
+            $table->string('department')->nullable();
+            $table->string('type'); // ['VIP', 'Bebas', 'Dalam', 'Luar', 'Sakit']
             $table->timestamps();
         });
     }

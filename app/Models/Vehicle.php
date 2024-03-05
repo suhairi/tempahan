@@ -11,13 +11,15 @@ class Vehicle extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'location', 'carmodel_id', 'driver_id'];
+
     public function driver(): BelongsTo
     {
         return $this->belongsTo(Driver::class);
     }
 
-    public function carbrand(): HasOne 
-    {
-        return $this->hasOne('Carbrand::class');
-    }
+    // public function carmodel(): BelongsTo 
+    // {
+    //     return $this->belongsTo(Carmodel::class);
+    // }
 }

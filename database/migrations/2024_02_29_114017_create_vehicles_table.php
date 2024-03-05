@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();            
-            $table->string('type')->nullable();
             $table->string('location')->nullable(); // ['HQ', 'Wilayah', 'Worksyop', 'Pengembangan', ...]
-            $table->foreignId('carbrand_id')->nullable();
+            $table->foreignId('carmodel_id')->nullable();
             $table->foreignId('driver_id')->nullable();
             $table->timestamps();
         });

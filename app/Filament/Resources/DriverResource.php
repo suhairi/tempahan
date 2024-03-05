@@ -5,8 +5,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DriverResource\Pages;
 use App\Filament\Resources\DriverResource\RelationManagers;
 use App\Models\Driver;
+use App\Models\Vehicle;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -28,33 +30,35 @@ class DriverResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('phone')
+                TextInput::make('slug')
+                    ->required()
+                    ->maxLength(20),                    
+                TextInput::make('phone')
                     ->tel()
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
+                    ->maxLength(15),
+                TextInput::make('email')
                     ->email()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('staffId')
+                TextInput::make('staffId')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('bahagian')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('jawatan')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('gred')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('pergerakan')
-                    ->required()
-                    ->maxLength(255),
-                Select::make('vehicles')
+                TextInput::make('department')
+                    ->placeholder('Bahagian Khidmat Pengurusan')
+                    ->maxLength(150),
+                Select::make('type')
+                ->label('Jenis Pergerakan Pemandu')
+                    ->options([
+                        'VIP' => 'VIP',
+                        'Bebas' => 'Bebas (Luar dan dalam MADA)',
+                        'Dalam' => 'Dalam', 
+                        'Sakit' => 'Sakit',
+                    ]),
+                Select::make('vehicle_id')
                     ->label('**Vehicle')
-                    ->relationship(
-                        name: 'vehicles',
-                        titleAttribute: 'name',
-                    )
+                    ->relationship('vehicles', 'name')
                     ->multiple()
                     ->searchable()
                     ->preload(),
@@ -67,19 +71,17 @@ class DriverResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                    Tables\Columns\TextColumn::make('slug')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('staffId')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('bahagian')
+                Tables\Columns\TextColumn::make('department')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('jawatan')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('gred')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('pergerakan')
+                Tables\Columns\TextColumn::make('type')
                     ->searchable(),
                 TextColumn::make('vehicles.name'),
                 Tables\Columns\TextColumn::make('created_at')

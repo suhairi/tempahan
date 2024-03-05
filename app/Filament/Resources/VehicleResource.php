@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\VehicleResource\Pages;
 use App\Filament\Resources\VehicleResource\RelationManagers;
 use App\Models\Vehicle;
+use App\Models\Carmodel;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -33,14 +34,47 @@ class VehicleResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->label('Plate No'),
-                TextInput::make('brand'),
-                TextInput::make('model'),
-                TextInput::make('type'),
-                TextInput::make('location')
+                Select::make('carmodel')
+                    ->relationship('carmodel', 'name'),
+                Select::make('location')
+                    ->options([
+                        'HQ'            => 'HQ',
+                        'Wilayah 1'     => 'Wilayah 1',
+                        'Worksyop'      => 'Worksyop',
+                        'Pengembangan'  => 'Pengembangan'
+                    ])
+                    ->default('HQ')
                     ->label('Penempatan'),
                 Select::make('drivers')
                     ->relationship('driver', 'name')
-                    ->searchable()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('slug')
+                            ->required()
+                            ->maxLength(20),
+                        TextInput::make('phone')
+                            ->tel()
+                            ->required()
+                            ->maxLength(15),
+                        TextInput::make('email')
+                            ->email()
+                            ->maxLength(255),
+                        TextInput::make('staffId')
+                            ->maxLength(255),
+                        TextInput::make('bahagian')
+                            ->maxLength(255),
+                        Select::make('type')
+                            ->label('Jenis Pergerakan Pemandu')
+                            ->options([
+                                'VIP' => 'VIP',
+                                'Bebas' => 'Bebas (Luar dan dalam MADA)',
+                                'Dalam' => 'Dalam', 
+                                'Sakit' => 'Sakit',
+                            ]),
+                    ])
+                    ->searchable()                    
                     ->preload(),
             ]);
     }
@@ -51,15 +85,11 @@ class VehicleResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->label('Plate No'),
-                TextColumn::make('brand')
-                    ->label('Jenama'),
                 TextColumn::make('model')
                     ->label('Model'),
-                TextColumn::make('type')
-                    ->label('Jenis Kenderaan'),
                 TextColumn::make('location')
                     ->label('Penempatan'),
-                TextColumn::make('driver_id'),
+                TextColumn::make('drivers.name'),
             ])
             ->filters([
                 //
