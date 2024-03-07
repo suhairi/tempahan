@@ -4,9 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\Staff;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -34,16 +36,27 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
+                Select::make('name')
+                    ->options(Staff::all()->pluck('nama', 'nama'))
+                    ->live()
+                    ->afterStateUpdated(function($state, $set, Staff $staff){
+                        $stf = $staff->where('nama', '=', $state)->first();
+                        $set('staffid', $stf->staff_id);
+                    })
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                TextInput::make('staffid')
+                    ->readonly()
+                    ->required(),                
                 Forms\Components\TextInput::make('email')
-                    ->email()
                     ->required()
-                    ->default('suhairi@mada.gov.my')
+                    ->email()
+                    ->unique()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('password')
                     ->password()
+                    ->default('password')
                     ->required(fn (string $operation): bool => $operation === 'create')
                     ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
                     ->dehydrated(fn (?string $state): bool => filled($state))

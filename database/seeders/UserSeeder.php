@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $user = User::create([
-            'name'      => 'Suhairi Abdul Hamid',
+            'name'      => strtoupper('Suhairi Abdul Hamid'),
             'email'     => 'admin@admin.com',
             'staffid'   => '3374',
             'password'  => bcrypt('password'),
@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
         $user->assignRole('Super Admin');
 
         $user = User::create([
-            'name'      => 'Mohd Hazran bin Md Zuki',
+            'name'      => strtoupper('Mohd Hazran bin Md Zuki'),
             'email'     => 'hazran@mada.gov.my',
             'staffid'   => '3834',
             'password'  => bcrypt('password'),
@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
         $user->assignRole('Super Admin');
 
         $user = User::create([
-            'name'      => 'Juliana binti Abdul Sattar',
+            'name'      => strtoupper('Juliana binti Abdul Sattar'),
             'email'     => 'juliana@mada.gov.my',
             'staffid'   => '2419',
             'password'  => bcrypt('password'),
@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
         $user->assignRole('Admin');
 
         $user = User::create([
-            'name'      => 'Mohd Zuhdi bin Jamaludin',
+            'name'      => strtoupper('Mohd Zuhdi bin Jamaludin'),
             'email'     => 'zuhdi@mada.gov.my',
             'staffid'   => '3703',
             'password'  => bcrypt('password'),
@@ -52,7 +52,7 @@ class UserSeeder extends Seeder
         $user->assignRole('Admin');
 
         $user = User::create([
-            'name'      => 'Nur Farah Amylia binti Zakri',
+            'name'      => strtoupper('Nur Farah Amylia binti Zakri'),
             'email'     => 'farahamylia1997@gmail.com',
             'staffid'   => '4052',
             'password'  => bcrypt('password'),
@@ -61,17 +61,13 @@ class UserSeeder extends Seeder
         $user->assignRole('Admin');
 
         $user = User::create([
-            'name'      => 'Mohd Haiqal bin Shahardi',
+            'name'      => strtoupper('Mohd Haiqal bin Shahardi'),
             'email'     => 'haiqalshahardi@gmail.com',
             'staffid'   => '4020',
             'password'  => bcrypt('password'),
             'email_verified_at' => now(),
         ]);
         $user->assignRole('Admin');
-
-        
-
-        
 
         
     }

@@ -24,14 +24,14 @@ class CreateUser extends CreateRecord implements ShouldQueue
 
     protected function getCreatedNotification(): ?Notification
     {
-        dd($this->user()->role()->name);
+        // dd($this->user()->role()->name);
 
         $user = $this->record;
 
-        Mail::to($user)
-            // ->send(new UserCreated($user))
-            ->queue(new UserCreated($user))
-            ;
+        // Mail::to($user)
+        //     // ->send(new UserCreated($user))
+        //     ->queue(new UserCreated($user))
+        //     ;
 
         return Notification::make()
             ->success()
