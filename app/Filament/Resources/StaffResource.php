@@ -6,10 +6,12 @@ use App\Filament\Resources\StaffResource\Pages;
 use App\Filament\Resources\StaffResource\RelationManagers;
 use App\Models\Bahagian;
 use App\Models\Cawangan;
+use App\Models\Gelaran;
 use App\Models\Grade;
 use App\Models\Jawatan;
 use App\Models\Seksyen;
 use App\Models\Staff;
+use App\Models\Status;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -53,6 +55,15 @@ class StaffResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('staff_id')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('kod_gelaran_semasa')
+                    ->label('Gelaran')
+                    ->getStateUsing(function(Model $record, Gelaran $gelaran) {
+                        $glrn = $gelaran->where('id', '=', $record->kod_gelaran_semasa)->first();
+                        if(empty($glrn))
+                            return 'Encik';
+                        return $record;
+                    })
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('no_kp')
@@ -127,12 +138,11 @@ class StaffResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('kod_jawatan_semasa')
-                    ->label('Position')
+                    ->label('Jawatan')
                     ->getStateUsing(function(Model $record, Jawatan $jawatan) {
                         $jwtn = $jawatan->where('id', '=', $record->kod_jawatan_semasa)->first();
                         return $jwtn->name;
                     })
-                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('kod_gred_semasa')
                     ->label('Grade')
@@ -142,7 +152,6 @@ class StaffResource extends Resource
                             return '**unknown**';
                         return $gred->name;
                     })
-                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('kod_bhgn_semasa')
                     ->label('Bahagian')
@@ -216,13 +225,17 @@ class StaffResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('status_code')
-                    ->numeric()
+                    ->getStateUsing(function(Model $record, Status $status) {
+                        $stats = $status->where('id', '=', $record->status_code)->first();
+                        if(empty($stats))
+                            return '**unknnown**';
+                        return $stats->name;
+                    })
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('staff_location')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('kod_gelaran_semasa')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                
             ])
             ->defaultSort('nama', 'asc')
             ->filters([

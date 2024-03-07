@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
         $this->call(BahagianSeeder::class);
         $this->call(CawanganSeeder::class);
         $this->call(SeksyenSeeder::class);
+        $this->call(StatusSeeder::class);
+        $this->call(GelaranSeeder::class);
         $this->call(DriverSeeder::class);
         $this->call(VehicleSeeder::class);
     }
