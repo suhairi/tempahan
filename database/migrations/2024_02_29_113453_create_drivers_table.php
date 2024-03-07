@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('slug')->nullable();
             $table->string('phone');
             $table->string('email')->nullable();
-            $table->string('staffId')->nullable();
+            $table->string('staffId')->unique();
             $table->string('department')->nullable();
             $table->string('type'); // ['VIP', 'Bebas', 'Dalam', 'Luar', 'Sakit']
             $table->timestamps();

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DriverResource\Pages;
 use App\Filament\Resources\DriverResource\RelationManagers;
 use App\Models\Driver;
+use App\Models\Staff;
 use App\Models\Vehicle;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -16,6 +17,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class DriverResource extends Resource
 {
@@ -30,12 +32,33 @@ class DriverResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->required()
+                Select::make('name')
+                ->options(Staff::all()->pluck('nama', 'nama'))
+                ->live()
+                ->afterStateUpdated(function($state, $set, Staff $staff){
+                    // Set staffid
+                    $stf = $staff->where('nama', '=', $state)->first();
+                    $set('staffid', $stf->staff_id);
+
+                    // set slug
+                    $patterns = ['/AHMAD/', '/MOHD/', '/MOHD /', '/MUHAMMAD/', '/MOHD./', '/MOHAMAD/', '/ABDUL/', '/BIN/', '/ABU/', '/NOR/'];
+                    $state = explode(' ', Str::squish(Str::remove('. ', preg_replace($patterns, '', $state))));
+                    $slug = $state[0];
+                    $set('slug', $slug);
+                })
+                ->searchable()
+                ->preload()
+                ->required(),
+                TextInput::make('staffid')
                     ->maxLength(255),
                 TextInput::make('slug')
+                    ->label('Nama Samaran')
                     ->required()
-                    ->maxLength(20),                    
+                    ->maxLength(20),
+                TextInput::make('department')
+                    ->placeholder('Bahagian Khidmat Pengurusan')
+                    ->default('BAHAGIAN KHIDMAT PENGURUSAN')
+                    ->maxLength(150),                  
                 TextInput::make('phone')
                     ->tel()
                     ->required()
@@ -43,26 +66,24 @@ class DriverResource extends Resource
                 TextInput::make('email')
                     ->email()
                     ->maxLength(255),
-                TextInput::make('staffId')
-                    ->maxLength(255),
-                TextInput::make('department')
-                    ->placeholder('Bahagian Khidmat Pengurusan')
-                    ->maxLength(150),
+                
+                
                 Select::make('type')
                 ->label('Jenis Pergerakan Pemandu')
-                    ->options([
+                ->options([
                         'VIP' => 'VIP',
                         'Bebas' => 'Bebas (Luar dan dalam MADA)',
                         'Dalam' => 'Dalam', 
                         'Sakit' => 'Sakit',
-                    ]),
+                    ])
+                ->default('Bebas'),
                 Select::make('vehicle_id')
                     ->label('**Vehicle')
                     ->relationship('vehicles', 'name')
                     ->multiple()
                     ->searchable()
                     ->preload(),
-            ]);
+            ])->columns(3);
     }
 
     public static function table(Table $table): Table

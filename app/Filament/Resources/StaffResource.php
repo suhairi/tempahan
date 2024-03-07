@@ -61,7 +61,7 @@ class StaffResource extends Resource
                         $glrn = $gelaran->where('id', '=', $record->kod_gelaran_semasa)->first();
                         if(empty($glrn))
                             return 'Encik';
-                        return $record;
+                        return $record->name;
                     })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nama')
