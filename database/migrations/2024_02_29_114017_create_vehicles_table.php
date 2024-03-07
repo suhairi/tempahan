@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();            
-            $table->string('location')->nullable(); // ['HQ', 'Wilayah', 'Worksyop', 'Pengembangan', ...]
-            $table->foreignId('carmodel_id')->nullable();
+            $table->string('name')->unique();   // Should be plate_no         
+            // $table->string('location')->nullable(); // ['HQ', 'Wilayah', 'Worksyop', 'Pengembangan', ...]
+            // $table->foreignId('carmodel_id')->nullable();
             $table->foreignId('driver_id')->nullable();
             $table->timestamps();
         });

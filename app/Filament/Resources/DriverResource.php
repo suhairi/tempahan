@@ -28,6 +28,7 @@ class DriverResource extends Resource
     protected static ?string $navigationGroup = 'Admin Management';
     protected static ?int $navigationSort = 2;
 
+    public Vehicle $vehicle;
     public static function form(Form $form): Form
     {
         return $form
@@ -50,6 +51,7 @@ class DriverResource extends Resource
                 ->preload()
                 ->required(),
                 TextInput::make('staffid')
+                    ->label('Staff ID')
                     ->maxLength(255),
                 TextInput::make('slug')
                     ->label('Nama Samaran')
@@ -65,8 +67,8 @@ class DriverResource extends Resource
                     ->maxLength(15),
                 TextInput::make('email')
                     ->email()
-                    ->maxLength(255),
-                
+                    ->unique()
+                    ->maxLength(255),              
                 
                 Select::make('type')
                 ->label('Jenis Pergerakan Pemandu')
@@ -77,48 +79,45 @@ class DriverResource extends Resource
                         'Sakit' => 'Sakit',
                     ])
                 ->default('Bebas'),
-                Select::make('vehicle_id')
+                Select::make('vehicles')
                     ->label('**Vehicle')
-                    ->relationship('vehicles', 'name')
+                    ->relationship('vehicles', 'name', fn(Builder $query) => $query->where('driver_id', null))
                     ->multiple()
                     ->searchable()
                     ->preload(),
-            ])->columns(3);
+            ])
+            ->columns(3);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('staffid')
+                    ->label('Staff ID')
                     ->searchable(),
-                    Tables\Columns\TextColumn::make('slug')
+                Tables\Columns\TextColumn::make('type')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),                
+                Tables\Columns\TextColumn::make('slug')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('staffId')
-                    ->searchable(),
+                    ->searchable(),                
                 Tables\Columns\TextColumn::make('department')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('type')
-                    ->searchable(),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),                
                 TextColumn::make('vehicles.name'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -130,7 +129,7 @@ class DriverResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\VehiclesRelationManager::class,
         ];
     }
 

@@ -11,7 +11,13 @@ class Driver extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'phone', 'email', 'staffId', 'department', 'type'];
+    protected $fillable = ['id', 'name', 'slug', 'phone', 'email', 'staffid', 'department', 'type'];
+
+    public function vehicles(): HasMany
+    {
+        // return $this->hasMany(Vehicle::class);
+        return $this->hasMany(Vehicle::class, 'driver_id');
+    }
 
     protected function name(): Attribute 
     {
@@ -27,11 +33,6 @@ class Driver extends Model
             set: fn(string $value) => strtoupper($value),
             get: fn(string $value) => strtoupper($value),
         );
-    }
-
-    public function vehicles(): HasMany
-    {
-        return $this->hasMany(Vehicle::class);
     }
 
 }

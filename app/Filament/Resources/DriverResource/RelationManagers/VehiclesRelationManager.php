@@ -1,41 +1,30 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\DriverResource\RelationManagers;
 
-use App\Filament\Resources\VehicleResource\Pages;
-use App\Filament\Resources\VehicleResource\RelationManagers;
 use App\Models\Vehicle;
-use App\Models\Carmodel;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-use App\Models\Driver;
-
-class VehicleResource extends Resource
+class VehiclesRelationManager extends RelationManager
 {
-    protected static ?string $model = Vehicle::class;
+    protected static string $relationship = 'vehicles';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    protected static ?string $navigationGroup = 'Admin Management';
-    protected static ?int $navigationSort = 3;
-
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')
                     ->label('Plate No'),
-                Select::make('carmodel')
-                    ->relationship('carmodel', 'name'),
+                TextInput::make('carmodel'),
                 Select::make('location')
                     ->options([
                         'HQ'            => 'HQ',
@@ -48,9 +37,10 @@ class VehicleResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
                     ->label('Plate No'),
@@ -63,9 +53,11 @@ class VehicleResource extends Resource
             ->filters([
                 //
             ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
+            ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->slideOver(),
+                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -73,12 +65,5 @@ class VehicleResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ManageVehicles::route('/'),
-        ];
     }
 }
