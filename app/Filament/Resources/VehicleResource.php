@@ -4,8 +4,10 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\VehicleResource\Pages;
 use App\Filament\Resources\VehicleResource\RelationManagers;
+use App\Models\Carmodel;
 use App\Models\Vehicle;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -20,6 +22,11 @@ class VehicleResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-truck';
     protected static ?string $navigationGroup = 'Admin Management';
     protected static ?int $navigationSort = 3;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {
@@ -43,9 +50,14 @@ class VehicleResource extends Resource
                     ->required()
                     ->placeholder('Example: Pengembangan')
                     ->maxLength(255),
-                Forms\Components\Select::make('driver_id')
+                Select::make('driver_id')
                     ->required()
                     ->relationship('driver', 'name')
+                    ->searchable()
+                    ->preload(),
+                Select::make('carmodel_id')
+                    ->label('Car Model')
+                    ->options(Carmodel::all()->pluck('name', 'id'))
                     ->searchable()
                     ->preload(),
             ]);
@@ -56,12 +68,19 @@ class VehicleResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('plateno')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('location')
+                    ->label('Plate No')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('driver.name')
-                    ->numeric()
+                    ->searchable()
+                    ->label('Driver\'s Name')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('carmodel.name')
+                    ->label('Car Model')
+                    ->searchable()
+                    ->sortable(),                    
+                Tables\Columns\TextColumn::make('location')
+                    ->label('Penempatan')
+                    ->searchable(),                
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -76,6 +95,7 @@ class VehicleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

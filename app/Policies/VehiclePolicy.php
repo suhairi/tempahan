@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Role;
 use App\Models\User;
+use App\Models\Vehicle;
 use Illuminate\Auth\Access\Response;
 
-class RolePolicy
+class VehiclePolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -22,7 +22,7 @@ class RolePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Role $role): bool
+    public function view(User $user, Vehicle $vehicle): bool
     {
         if($user->hasRole('Super Admin') || $user->hasRole('Admin'))
             return true;
@@ -44,7 +44,7 @@ class RolePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Role $role): bool
+    public function update(User $user, Vehicle $vehicle): bool
     {
         if($user->hasRole('Super Admin') || $user->hasRole('Admin'))
             return true;
@@ -55,7 +55,7 @@ class RolePolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Role $role): bool
+    public function delete(User $user, Vehicle $vehicle): bool
     {
         if($user->hasRole('Super Admin'))
             return true;
@@ -66,9 +66,9 @@ class RolePolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Role $role): bool
+    public function restore(User $user, Vehicle $vehicle): bool
     {
-        if($user->hasRole('Super Admin'))
+        if($user->hasRole('Super Admin') || $user->hasRole('Admin'))
             return true;
 
         return false;
@@ -77,9 +77,9 @@ class RolePolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Role $role): bool
+    public function forceDelete(User $user, Vehicle $vehicle): bool
     {
-        if($user->hasRole('Super Admin'))
+        if($user->hasRole('Super Admin') || $user->hasRole('Admin'))
             return true;
 
         return false;

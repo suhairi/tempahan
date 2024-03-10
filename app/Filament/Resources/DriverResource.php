@@ -28,6 +28,11 @@ class DriverResource extends Resource
     protected static ?string $navigationGroup = 'Admin Management';
     protected static ?int $navigationSort = 2;
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -51,6 +56,7 @@ class DriverResource extends Resource
                     ,
                 Forms\Components\TextInput::make('staffid')
                     ->label('Staff ID')
+                    ->readOnly()
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('slug')

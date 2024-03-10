@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Role;
+use App\Models\Carbrand;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class RolePolicy
+class CarbrandPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -22,7 +22,7 @@ class RolePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Role $role): bool
+    public function view(User $user, Carbrand $carbrand): bool
     {
         if($user->hasRole('Super Admin') || $user->hasRole('Admin'))
             return true;
@@ -44,7 +44,7 @@ class RolePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Role $role): bool
+    public function update(User $user, Carbrand $carbrand): bool
     {
         if($user->hasRole('Super Admin') || $user->hasRole('Admin'))
             return true;
@@ -55,7 +55,7 @@ class RolePolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Role $role): bool
+    public function delete(User $user, Carbrand $carbrand): bool
     {
         if($user->hasRole('Super Admin'))
             return true;
@@ -66,7 +66,7 @@ class RolePolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Role $role): bool
+    public function restore(User $user, Carbrand $carbrand): bool
     {
         if($user->hasRole('Super Admin'))
             return true;
@@ -77,7 +77,7 @@ class RolePolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Role $role): bool
+    public function forceDelete(User $user, Carbrand $carbrand): bool
     {
         if($user->hasRole('Super Admin'))
             return true;

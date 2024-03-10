@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vehicles', function (Blueprint $table) {
+        Schema::create('carmodels', function (Blueprint $table) {
             $table->id();
-            $table->string('plateno');
-            $table->string('location');
-            $table->foreignId('driver_id');
-            $table->foreignId('carmodel_id')->nullable();
+            $table->string('name'); // Preve, Hiace, X-Trail, Fortuner, X70, CRV, R Maxus
+            $table->foreignId('carbrand_id');
+            $table->foreignId('cartype_id');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vehicles');
+        Schema::dropIfExists('carmodels');
     }
 };
