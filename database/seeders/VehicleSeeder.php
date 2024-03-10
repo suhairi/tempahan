@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 use App\Models\Vehicle;
+use Illuminate\Support\Facades\DB;
 
 class VehicleSeeder extends Seeder
 {
@@ -14,48 +15,50 @@ class VehicleSeeder extends Seeder
      */
     public function run(): void
     {
-        Vehicle::create(['name' => 'KY5000']);
-        Vehicle::create(['name' => 'KBD96']);
-        Vehicle::create(['name' => 'KEM7007']);
-        Vehicle::create(['name' => 'KEC616']);
-        Vehicle::create(['name' => 'KEE6398']);
-        Vehicle::create(['name' => 'KEE6598']);
-        Vehicle::create(['name' => 'KEL6000']);
-        Vehicle::create(['name' => 'KDE6886']);
-        Vehicle::create(['name' => 'KDB6886']);
-        Vehicle::create(['name' => 'KDA6896']);
-        Vehicle::create(['name' => 'KEP6006']);
-        Vehicle::create(['name' => 'KEE6498']);
-        Vehicle::create(['name' => 'KCH6599']);
-        Vehicle::create(['name' => 'KDA6986']);
-        Vehicle::create(['name' => 'KDJ9149']);
-        Vehicle::create(['name' => 'KEL3000']);
-        Vehicle::create(['name' => 'KDA6800']);
-        Vehicle::create(['name' => 'KDA6698']);
-        Vehicle::create(['name' => 'KDJ9150']);
-        Vehicle::create(['name' => 'KCH5699']);
-        Vehicle::create(['name' => 'KCF9758']);
-        Vehicle::create(['name' => 'KEP6600']);
-        // Vehicle::create(['name' => 'KDJ9150']);
-        Vehicle::create(['name' => 'KCM6886']);
-        Vehicle::create(['name' => 'KDA9869']);
-        Vehicle::create(['name' => 'KDC8886']);
-        Vehicle::create(['name' => 'KCG3155']);
-        Vehicle::create(['name' => 'KCU912']);
-        Vehicle::create(['name' => 'KCK3529']);
-        Vehicle::create(['name' => 'KCL7469']);
-        Vehicle::create(['name' => 'KCG3193']);
-        Vehicle::create(['name' => 'KCB5418']);
-        Vehicle::create(['name' => 'KBU1229']);
-        Vehicle::create(['name' => 'KCF9927']);
-        Vehicle::create(['name' => 'KCL7470']);
-        Vehicle::create(['name' => 'KDU54']);
-        Vehicle::create(['name' => 'KBD6931']);
-        Vehicle::create(['name' => 'KDC48']);
-        Vehicle::create(['name' => 'KDY458']);
-        Vehicle::create(['name' => 'KCT8777']);
-        Vehicle::create(['name' => 'KCJ9859']);
-        Vehicle::create(['name' => 'KCN6589']);
+        $vehicles = array(
+            array("id" => "1","plateno" => "KY5000","location" => "HQ","driver_id" => "2"),
+            array("id" => "2","plateno" => "KBD96","location" => "HQ","driver_id" => "3"),
+            array("id" => "3","plateno" => "KEM7007","location" => "HQ","driver_id" => "4"),
+            array("id" => "4","plateno" => "KEC616","location" => "HQ","driver_id" => "5"),
+            array("id" => "5","plateno" => "KEE6398","location" => "HQ","driver_id" => "6"),
+            array("id" => "6","plateno" => "KEE6598","location" => "HQ","driver_id" => "7"),
+            array("id" => "7","plateno" => "KEL6000","location" => "HQ","driver_id" => "8"),
+            array("id" => "8","plateno" => "KDE6886","location" => "HQ","driver_id" => "9"),
+            array("id" => "9","plateno" => "KDB6886","location" => "HQ","driver_id" => "10"),
+            array("id" => "10","plateno" => "KDA6896","location" => "HQ","driver_id" => "11"),
+            array("id" => "11","plateno" => "KEP6006","location" => "HQ","driver_id" => "13"),
+            array("id" => "12","plateno" => "KEE6498","location" => "HQ","driver_id" => "14"),
+            array("id" => "13","plateno" => "KCH6599","location" => "HQ","driver_id" => "15"),
+            array("id" => "14","plateno" => "KDA6986","location" => "HQ","driver_id" => "16"),
+            array("id" => "15","plateno" => "KDJ9149","location" => "HQ","driver_id" => "22"),
+            array("id" => "16","plateno" => "KEL3000","location" => "HQ","driver_id" => "18"),
+            array("id" => "17","plateno" => "KDA6800","location" => "HQ","driver_id" => "19"),
+            array("id" => "18","plateno" => "KDA6698","location" => "HQ","driver_id" => "20"),
+            array("id" => "19","plateno" => "KDJ9150","location" => "HQ","driver_id" => "25"),
+            array("id" => "20","plateno" => "KCH5699","location" => "HQ","driver_id" => "23"),
+            array("id" => "21","plateno" => "KCF9758","location" => "HQ","driver_id" => "24"),
+            array("id" => "22","plateno" => "KEP6600","location" => "HQ","driver_id" => "1"),
+            array("id" => "23","plateno" => "KCM6886","location" => "HQ","driver_id" => "26"),
+            array("id" => "24","plateno" => "KDA9869","location" => "HQ","driver_id" => "1"),
+            array("id" => "25","plateno" => "KDC8886","location" => "HQ","driver_id" => "1"),
+            array("id" => "26","plateno" => "KCG3155","location" => "HQ","driver_id" => "1"),
+            array("id" => "27","plateno" => "KCU912","location" => "HQ","driver_id" => "1"),
+            array("id" => "28","plateno" => "KCK3529","location" => "HQ","driver_id" => "1"),
+            array("id" => "29","plateno" => "KCL7469","location" => "HQ","driver_id" => "1"),
+            array("id" => "30","plateno" => "KCG3193","location" => "HQ","driver_id" => "1"),
+            array("id" => "31","plateno" => "KCB5418","location" => "HQ","driver_id" => "1"),
+            array("id" => "32","plateno" => "KBU1229","location" => "HQ","driver_id" => "1"),
+            array("id" => "33","plateno" => "KCF9927","location" => "HQ","driver_id" => "1"),
+            array("id" => "34","plateno" => "KCL7470","location" => "HQ","driver_id" => "1"),
+            array("id" => "35","plateno" => "KDU54","location" => "HQ","driver_id" => "1"),
+            array("id" => "36","plateno" => "KBD6931","location" => "HQ","driver_id" => "1"),
+            array("id" => "37","plateno" => "KDC48","location" => "HQ","driver_id" => "1"),
+            array("id" => "38","plateno" => "KDY458","location" => "HQ","driver_id" => "1"),
+            array("id" => "39","plateno" => "KCT8777","location" => "HQ","driver_id" => "1"),
+            array("id" => "40","plateno" => "KCJ9859","location" => "HQ","driver_id" => "1"),
+            array("id" => "41","plateno" => "KCN6589","location" => "HQ","driver_id" => "1"),
+        );
+        DB::table('vehicles')->insert($vehicles);
 
     }
 }

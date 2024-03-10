@@ -5,26 +5,19 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\VehicleResource\Pages;
 use App\Filament\Resources\VehicleResource\RelationManagers;
 use App\Models\Vehicle;
-use App\Models\Carmodel;
 use Filament\Forms;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
-use App\Models\Driver;
 
 class VehicleResource extends Resource
 {
     protected static ?string $model = Vehicle::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-truck';
     protected static ?string $navigationGroup = 'Admin Management';
     protected static ?int $navigationSort = 3;
 
@@ -32,19 +25,29 @@ class VehicleResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->label('Plate No'),
-                Select::make('carmodel')
-                    ->relationship('carmodel', 'name'),
-                Select::make('location')
-                    ->options([
-                        'HQ'            => 'HQ',
-                        'Wilayah 1'     => 'Wilayah 1',
-                        'Worksyop'      => 'Worksyop',
-                        'Pengembangan'  => 'Pengembangan'
-                    ])
-                    ->default('HQ')
-                    ->label('Penempatan'),
+                Forms\Components\TextInput::make('plateno')
+                    ->label('Plate No')
+                    ->placeholder('KEE5656')
+                    ->autofocus()
+                    ->live()
+                    ->afterStateUpdated(function($state, $set) {
+                        $set('plateno', strtoupper($state));
+                    })
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('location')
+                    ->live()
+                    ->afterStateUpdated(function($state, $set) {
+                        $set('location', strtoupper($state));
+                    })
+                    ->required()
+                    ->placeholder('Example: Pengembangan')
+                    ->maxLength(255),
+                Forms\Components\Select::make('driver_id')
+                    ->required()
+                    ->relationship('driver', 'name')
+                    ->searchable()
+                    ->preload(),
             ]);
     }
 
@@ -52,21 +55,27 @@ class VehicleResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                    ->label('Plate No'),
-                TextColumn::make('model')
-                    ->label('Model'),
-                TextColumn::make('location')
-                    ->label('Penempatan'),
-                TextColumn::make('drivers.name'),
+                Tables\Columns\TextColumn::make('plateno')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('location')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('driver.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->slideOver(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -75,10 +84,19 @@ class VehicleResource extends Resource
             ]);
     }
 
+    public static function getRelations(): array
+    {
+        return [
+            
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageVehicles::route('/'),
+            'index' => Pages\ListVehicles::route('/'),
+            'create' => Pages\CreateVehicle::route('/create'),
+            'edit' => Pages\EditVehicle::route('/{record}/edit'),
         ];
     }
 }

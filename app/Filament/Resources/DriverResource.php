@@ -4,16 +4,16 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DriverResource\Pages;
 use App\Filament\Resources\DriverResource\RelationManagers;
+use App\Filament\Resources\DriverResource\RelationManagers\VehiclesRelationManager;
+use App\Models\Bahagian;
 use App\Models\Driver;
 use App\Models\Staff;
-use App\Models\Vehicle;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,68 +23,68 @@ class DriverResource extends Resource
 {
     protected static ?string $model = Driver::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
     protected static ?string $navigationGroup = 'Admin Management';
     protected static ?int $navigationSort = 2;
 
-    public Vehicle $vehicle;
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Select::make('name')
-                ->options(Staff::all()->pluck('nama', 'nama'))
-                ->live()
-                ->afterStateUpdated(function($state, $set, Staff $staff){
-                    // Set staffid
-                    $stf = $staff->where('nama', '=', $state)->first();
-                    $set('staffid', $stf->staff_id);
-
-                    // set slug
-                    $patterns = ['/AHMAD/', '/MOHD/', '/MOHD /', '/MUHAMMAD/', '/MOHD./', '/MOHAMAD/', '/ABDUL/', '/BIN/', '/ABU/', '/NOR/'];
-                    $state = explode(' ', Str::squish(Str::remove('. ', preg_replace($patterns, '', $state))));
-                    $slug = $state[0];
-                    $set('slug', $slug);
-                })
-                ->searchable()
-                ->preload()
-                ->required(),
-                TextInput::make('staffid')
-                    ->label('Staff ID')
-                    ->maxLength(255),
-                TextInput::make('slug')
-                    ->label('Nama Samaran')
+                    ->options(Staff::all()->pluck('nama', 'nama'))
+                    ->searchable()
+                    ->preload()
                     ->required()
-                    ->maxLength(20),
-                TextInput::make('department')
-                    ->placeholder('Bahagian Khidmat Pengurusan')
-                    ->default('BAHAGIAN KHIDMAT PENGURUSAN')
-                    ->maxLength(150),                  
-                TextInput::make('phone')
+                    ->live()
+                    ->afterStateUpdated(function($state, $get, $set) {
+                        $staff = Staff::where('nama', '=', $state)->first();
+                        $set('staffid', $staff->staff_id);
+
+                        // set slug
+                        $patterns = ['/AHMAD/', '/MOHD/', '/MOHD /', '/MUHAMMAD/', '/MOHD./', '/MOHAMAD/', '/ABDUL/', '/BIN/', '/ABU/', '/NOR/'];
+                        $state = explode(' ', Str::squish(Str::remove('. ', preg_replace($patterns, '', $state))));
+                        $slug = $state[0];
+                        $set('slug', strtolower($slug));
+                    })
+                    ,
+                Forms\Components\TextInput::make('staffid')
+                    ->label('Staff ID')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('slug')
+                    ->label('Nama Panggilan')
+                    ->required()
+                    ->readOnly(),
+                Forms\Components\TextInput::make('phone')
                     ->tel()
                     ->required()
-                    ->maxLength(15),
-                TextInput::make('email')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('email')
                     ->email()
-                    ->unique()
-                    ->maxLength(255),              
+                    ->maxLength(255),
                 
-                Select::make('type')
-                ->label('Jenis Pergerakan Pemandu')
-                ->options([
-                        'VIP' => 'VIP',
-                        'Bebas' => 'Bebas (Luar dan dalam MADA)',
-                        'Dalam' => 'Dalam', 
-                        'Sakit' => 'Sakit',
-                    ])
-                ->default('Bebas'),
-                Select::make('vehicles')
-                    ->label('**Vehicle')
-                    ->relationship('vehicles', 'name', fn(Builder $query) => $query->where('driver_id', null))
-                    ->multiple()
+                Select::make('bahagian_id')
+                    ->label('Bahagian')
+                    ->options(Bahagian::all()->pluck('name', 'id'))
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->default(7),
+                Select::make('type')
+                    ->label('Jenis Pergerakan Pemandu')
+                    ->options([
+                            'VIP' => 'VIP',
+                            'Bebas' => 'Bebas (Luar dan dalam MADA)',
+                            'Dalam' => 'Dalam', 
+                            'Sakit' => 'Sakit',
+                        ])
+                    ->default('Bebas'),
+                // Select::make('vehicles')
+                //     ->multiple()
+                //     ->relationship('vehicles', 'plateno', fn(Builder $query) => $query->where('driver_id', NULL))
+                //     ->searchable()
+                //     ->preload(),
             ])
             ->columns(3);
     }
@@ -93,24 +93,30 @@ class DriverResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('staffid')
-                    ->label('Staff ID')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('type')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),                
-                Tables\Columns\TextColumn::make('slug')
-                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('staffid')
+                    ->searchable(),
+                BadgeColumn::make('slug')
+                    ->color('success')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
-                    ->searchable(),                
-                Tables\Columns\TextColumn::make('department')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->searchable(),                
-                TextColumn::make('vehicles.name'),
+                    ->searchable(),
+                
+                Tables\Columns\TextColumn::make('bahagian.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('type')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
@@ -129,7 +135,7 @@ class DriverResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\VehiclesRelationManager::class,
+            VehiclesRelationManager::class,
         ];
     }
 

@@ -2,14 +2,10 @@
 
 namespace App\Filament\Resources\DriverResource\RelationManagers;
 
-use App\Models\Vehicle;
 use Filament\Forms;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -22,33 +18,36 @@ class VehiclesRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->label('Plate No'),
-                TextInput::make('carmodel'),
-                Select::make('location')
-                    ->options([
-                        'HQ'            => 'HQ',
-                        'Wilayah 1'     => 'Wilayah 1',
-                        'Worksyop'      => 'Worksyop',
-                        'Pengembangan'  => 'Pengembangan'
-                    ])
-                    ->default('HQ')
-                    ->label('Penempatan'),
+                Forms\Components\TextInput::make('plateno')
+                    ->label('Plate No')
+                    ->placeholder('KEE5656')
+                    ->live()
+                    ->afterStateUpdated(function($state, $set) {
+                        $set('plateno', strtoupper($state));
+                    })
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('location')
+                    ->live()
+                    ->afterStateUpdated(function($state, $set) {
+                        $set('location', strtoupper($state));
+                    })
+                    ->required()
+                    ->placeholder('Example: Pengembangan')
+                    ->maxLength(255),
             ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('name')
+            ->recordTitleAttribute('plateno')
             ->columns([
-                TextColumn::make('name')
-                    ->label('Plate No'),
-                TextColumn::make('model')
-                    ->label('Model'),
-                TextColumn::make('location')
-                    ->label('Penempatan'),
-                TextColumn::make('drivers.name'),
+                Tables\Columns\TextColumn::make('plateno')
+                    ->label('Plate No')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('location')
+                    ->searchable(),
             ])
             ->filters([
                 //
@@ -57,8 +56,8 @@ class VehiclesRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\EditAction::make(),
+                // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

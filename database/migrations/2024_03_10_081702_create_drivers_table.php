@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->nullable();
-            $table->string('phone');
-            $table->string('email')->nullable()->unique();
-            $table->string('staffid')->unique();
-            $table->string('department')->nullable();
-            $table->string('type'); // ['VIP', 'Bebas', 'Dalam', 'Luar', 'Sakit']
+            $table->string('staffid');
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('type');
+            $table->foreignId('bahagian_id');
             $table->timestamps();
         });
     }
