@@ -23,10 +23,10 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // This line was added to log activities of users
-        Activity::class => ActivityPolicy::class,
-        User::class     => UserPolicy::class,
-        Role::class     => RolePolicy::class,
-        Permission::class     => PermissionPolicy::class,
+        // Activity::class => ActivityPolicy::class,
+        // User::class     => UserPolicy::class,
+        // Role::class     => RolePolicy::class,
+        // Permission::class     => PermissionPolicy::class,
     ];
 
     /**
